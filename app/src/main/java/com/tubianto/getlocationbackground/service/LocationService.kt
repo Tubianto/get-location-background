@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
+import com.tubianto.getlocationbackground.R
 import com.tubianto.getlocationbackground.receiver.RestartBackgroundService
 
 class LocationService : Service() {
@@ -56,6 +57,8 @@ class LocationService : Service() {
                     val location: Location = locationResult.lastLocation
                     latitude = location.latitude
                     longitude = location.longitude
+
+                    Toast.makeText(applicationContext, "Update $location", Toast.LENGTH_SHORT).show()
                     Log.d("Location Service", "location update $location")
                 }
             }, null)
@@ -88,11 +91,11 @@ class LocationService : Service() {
     override fun onDestroy() {
         super.onDestroy()
 
-        /*ALWAYS UPDATE LOCATION WHERE APPS KILL*/
+        /*RESTART SERVICE WHERE APPS KILL*/
         val broadcastIntent = Intent()
         broadcastIntent.action = "restartservice"
         broadcastIntent.setClass(this, RestartBackgroundService::class.java)
         this.sendBroadcast(broadcastIntent)
-        /*ALWAYS UPDATE LOCATION WHERE APPS KILL*/
+        /*RESTART SERVICE WHERE APPS KILL*/
     }
 }

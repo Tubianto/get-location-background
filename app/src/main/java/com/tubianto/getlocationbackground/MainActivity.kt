@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.tubianto.getlocationbackground.service.LocationService
 import com.tubianto.getlocationbackground.util.Util
 
@@ -62,16 +63,21 @@ class MainActivity : AppCompatActivity() {
         mServiceIntent = Intent(this, mLocationService.javaClass)
         if (!Util.isMyServiceRunning(mLocationService.javaClass, mActivity)) {
             startService(mServiceIntent)
+            Toast.makeText(this, getString(R.string.service_start_successfully), Toast.LENGTH_SHORT).show()
             Log.i("INFO", getString(R.string.service_start_successfully))
         } else {
+            Toast.makeText(this, getString(R.string.service_already_running), Toast.LENGTH_SHORT).show()
             Log.i("INFO", getString(R.string.service_already_running))
         }
     }
 
     override fun onDestroy() {
+        super.onDestroy()
+
+        /*STOP SERVICE WHERE APPS KILL*/
         if (::mServiceIntent.isInitialized) {
             stopService(mServiceIntent)
         }
-        super.onDestroy()
+        /*STOP SERVICE WHERE APPS KILL*/
     }
 }
